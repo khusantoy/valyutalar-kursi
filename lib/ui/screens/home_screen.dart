@@ -136,6 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: const TextStyle(fontSize: 14),
                   ),
                   title: Text(currency.title),
+                  trailing: Text("${currency.price} sum"),
                 );
               },
             );
