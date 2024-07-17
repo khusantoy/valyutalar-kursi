@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:valyutalar_kursi/core/app.dart';
 import 'package:valyutalar_kursi/data/repositories/currencies_repository.dart';
 import 'package:valyutalar_kursi/logic/blocs/currency/currency_bloc.dart';
+import 'package:valyutalar_kursi/logic/observer/all_observer.dart';
 import 'package:valyutalar_kursi/services/currency_http_service.dart';
 
 void main() {
+  Bloc.observer = MyBlocObserver();
   final currencyHttpService = CurrencyHttpService();
   runApp(
     MultiRepositoryProvider(

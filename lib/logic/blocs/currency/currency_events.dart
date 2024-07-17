@@ -11,4 +11,8 @@ class ConvertEvent extends CurrencyEvents {
   ConvertEvent(this.from, this.sum);
 }
 
+class SearchCurrencyEvent extends CurrencyEvents {
+  final String query;
 
+  SearchCurrencyEvent(this.query);
+}

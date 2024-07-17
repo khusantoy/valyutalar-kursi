@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:rxdart/rxdart.dart'; // Import rxdart
 import 'package:valyutalar_kursi/data/models/currency.dart';
 import 'package:valyutalar_kursi/data/repositories/currencies_repository.dart';
 
@@ -10,7 +11,12 @@ class CurrencyBloc extends Bloc<CurrencyEvents, CurrenciesStates> {
       : super(InitialCurrencyState()) {
     on<GetCurrencieEvent>(_getCurrencies);
     on<ConvertEvent>(_convert);
-   
+    on<SearchCurrencyEvent>(
+      _searchCurrencies,
+      transformer: (events, mapper) => events
+          .debounceTime(const Duration(milliseconds: 500)) // Use debounceTime
+          .switchMap(mapper),
+    );
   }
 
   final InterfaceCurrencyRepository interfaceCurrencyRepository;
@@ -34,6 +40,20 @@ class CurrencyBloc extends Bloc<CurrencyEvents, CurrenciesStates> {
         event.sum,
       );
       emit(ConvertedCurrencyState(convertedAmount, _currencies));
+    } catch (e) {
+      emit(ErrorCurrencyState(e.toString()));
+    }
+  }
+
+  void _searchCurrencies(SearchCurrencyEvent event, emit) async {
+    emit(LoadingCurrencyState());
+    try {
+      final query = event.query.toLowerCase();
+      final filteredCurrencies = _currencies.where((currency) {
+        final currencyName = currency.title.toLowerCase();
+        return currencyName.contains(query);
+      }).toList();
+      emit(SearchedCurrencyState(filteredCurrencies));
     } catch (e) {
       emit(ErrorCurrencyState(e.toString()));
     }

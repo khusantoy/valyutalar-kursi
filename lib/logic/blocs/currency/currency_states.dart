@@ -24,3 +24,9 @@ class ConvertedCurrencyState extends CurrenciesStates {
 
   ConvertedCurrencyState(this.convertedAmount, this.currencies);
 }
+
+class SearchedCurrencyState extends CurrenciesStates {
+  final List<Currency> currencies;
+
+  SearchedCurrencyState(this.currencies);
+}
